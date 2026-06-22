@@ -49,9 +49,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
-      </body>
+  {/* Sitenin en üstüne menü ekliyoruz */}
+  <nav style={{ padding: '10px 20px', display: 'flex', justifyContent: 'flex-end' }}>
+    <a href="/blog" style={{ color: '#888', textDecoration: 'none', fontSize: '14px' }}>Blog</a>
+  </nav>
+  
+  {children}
+  {process.env.NODE_ENV === 'production' && <Analytics />}
+</body>
     </html>
   )
 }
