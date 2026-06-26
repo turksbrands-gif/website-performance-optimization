@@ -49,11 +49,36 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased">
-  
+        
+        {/* --- ÜST MENÜ (NAVBAR) BAŞLANGICI --- */}
+        <nav style={{ padding: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+          <a 
+            href="https://terminal.brandslord.online/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              padding: "12px 24px",
+              backgroundColor: "#050505",
+              color: "#ffffff",
+              textDecoration: "none",
+              fontWeight: "bold",
+              fontSize: "15px",
+              borderRadius: "6px",
+              border: "1px solid #333333",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.5)",
+              cursor: "pointer",
+              transition: "all 0.3s ease"
+            }}
+          >
+            📡 Live Market Pulse
+          </a>
+        </nav>
+        {/* --- ÜST MENÜ (NAVBAR) BİTİŞİ --- */}
 
-  {children}
-  {process.env.NODE_ENV === 'production' && <Analytics />}
-</body>
+        {children}
+        {process.env.NODE_ENV === 'production' && <Analytics />}
+      </body>
     </html>
   )
 }
