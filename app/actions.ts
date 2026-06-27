@@ -5,11 +5,9 @@ export type ScanState = {
   message?: string
 }
 
-export async function submitMarketScan(
-  prevState: ScanState,
-  formData: FormData
-): Promise<ScanState> {
-  // Formdan gelen 'market' ve 'email' verilerini alıyoruz
+export async function submitMarketScan(prevState: ScanState, formData: FormData): Promise<ScanState> {
+  // ... (Senin paylaştığın kodun tamamı buraya gelecek)
+}
   const market = formData.get("market") as string
   const email = formData.get("email") as string
 
