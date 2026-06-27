@@ -11,7 +11,7 @@ export function MarketScanForm() {
     setLoading(true)
 
     // n8n Webhook URL'ini buraya yerleştir
-    const webhookUrl = 'N8N_WEBHOOK_URL_BURAYA'
+    const webhookUrl = 'https://n8n.brandslord.online/webhook/site-arama'
 
     try {
       const response = await fetch(webhookUrl, {
