@@ -21,7 +21,7 @@ export async function submitMarketScan(
   try {
     // DİKKAT: Buraya n8n Webhook URL'nizi yapıştırın!
     // Örnek: "https://n8n.brandslord.online/webhook/1234abcd-5678-..."
-    const n8nWebhookUrl = "https://n8n.brandslord.online/webhook-test/site-arama"
+    const n8nWebhookUrl = "https://n8n.brandslord.online/webhook/site-arama"
 
     // n8n sunucumuza verileri arka planda (güvenli bir şekilde) gönderiyoruz
     const response = await fetch(n8nWebhookUrl, {
