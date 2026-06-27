@@ -15,10 +15,14 @@ export function MarketScanForm() {
 
     try {
       const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, email }),
-      })
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  // body içine veriyi doğrudan değil, bir obje içerisinde gönderiyoruz
+  body: JSON.stringify({
+    query: query,
+    email: email
+  
+})
       
       if (response.ok) {
         alert('Your intelligence request has been received. Your report will be sent to your email as soon as possible.')
