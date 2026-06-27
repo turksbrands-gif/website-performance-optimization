@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 
+// 1. Form Bileşenini burada tanımlıyoruz
 export function MarketScanForm() {
   const [query, setQuery] = useState('')
   const [email, setEmail] = useState('')
@@ -19,11 +20,13 @@ export function MarketScanForm() {
         body: JSON.stringify({
           query: query,
           email: email
-        }) // <--- Parantezleri buraya kapattık
-      }) // <--- Fetch fonksiyonunu burada kapattık
+        })
+      })
 
       if (response.ok) {
         alert('Your intelligence request has been received. Your report will be sent to your email as soon as possible.')
+      } else {
+        throw new Error('Server error')
       }
     } catch (error) {
       console.error('Hata:', error)
@@ -59,5 +62,17 @@ export function MarketScanForm() {
         {loading ? 'Scanning market...' : 'Scan Market →'}
       </button>
     </form>
+  )
+}
+
+// 2. SAYFANIN ANA BİLEŞENİ (BUILD HATALARINI GİDEREN KISIM)
+export default function Page() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-black">
+      <div className="w-full text-center mb-10">
+        <h1 className="text-4xl font-bold text-white mb-4">Brands Lord</h1>
+      </div>
+      <MarketScanForm />
+    </main>
   )
 }
