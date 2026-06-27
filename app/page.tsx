@@ -21,11 +21,11 @@ export function MarketScanForm() {
       })
       
       if (response.ok) {
-        alert('İstihbarat talebiniz alındı. Raporunuz en kısa sürede e-postanıza ulaşacak.')
+        alert('Your intelligence request has been received. Your report will be sent to your email as soon as possible.')
       }
     } catch (error) {
       console.error('Hata:', error)
-      alert('Sistem şu an meşgul, lütfen tekrar deneyin.')
+      alert('The system is currently busy; please try again.')
     } finally {
       setLoading(false)
     }
