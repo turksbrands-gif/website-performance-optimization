@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 
-// 1. Form Bileşenini burada tanımlıyoruz
+// 1. Senin orijinal form bileşenin
 export function MarketScanForm() {
   const [query, setQuery] = useState('')
   const [email, setEmail] = useState('')
@@ -65,14 +65,11 @@ export function MarketScanForm() {
   )
 }
 
-// 2. SAYFANIN ANA BİLEŞENİ (BUILD HATALARINI GİDEREN KISIM)
+// 2. Next.js'in aradığı "Sayfa" (Build hatasını bu kısım çözüyor)
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-black">
-      <div className="w-full text-center mb-10">
-        <h1 className="text-4xl font-bold text-white mb-4">Brands Lord</h1>
-      </div>
+    <div className="min-h-screen flex items-center justify-center">
       <MarketScanForm />
-    </main>
+    </div>
   )
 }
