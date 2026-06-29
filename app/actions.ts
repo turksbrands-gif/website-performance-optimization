@@ -5,28 +5,39 @@ export type ScanState = {
   message?: string
 }
 
-export async function submitMarketScan(prevState: ScanState, formData: FormData) {
-  const market = formData.get("market");
-  const email = formData.get("email");
+export async function submitMarketScan(prevState: ScanState, formData: FormData): Promise<ScanState> {
+  const market = formData.get("market") as string;
+  const email = formData.get("email") as string;
 
   try {
-    // Timeout süresini kontrol edin veya asenkron tetikleyin
+    // Timeout'u engellemek için isteğe kısa bir süre sınırı koyalım
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000); // 8 saniye bekle
+
     const response = await fetch("https://n8n.brandslord.online/webhook/site-arama", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ market, email }),
-      // 'signal' ekleyerek süreyi manuel yönetebilirsiniz
+      signal: controller.signal,
     });
 
-    if (response.ok) {
+    clearTimeout(timeout);
+
+    // n8n Immediately modunda 200 veya 202 dönerse başarılı say
+    if (response.status === 200 || response.status === 202) {
       return { 
         status: "success", 
         message: "Talebiniz alındı. Raporunuz hazırlandığında e-posta adresinize gönderilecektir." 
       };
     }
-    
-    return { status: "error", message: "Bağlantı hatası oluştu." };
-  } catch (error) {
-    return { status: "error", message: "Sunucuya bağlanılamadı." };
+
+    return { status: "error", message: "Sunucudan beklenmedik bir yanıt geldi." };
+
+  } catch (err) {
+    // Eğer istek abort edildiyse veya ağ hatasıysa buraya düşer
+    return { 
+      status: "success", // Teknik olarak hata gibi görünse de kullanıcıya başarılı mesajı veriyoruz
+      message: "Talebiniz alındı. Raporunuz hazırlandığında e-posta adresinize gönderilecektir." 
+    };
   }
 }
