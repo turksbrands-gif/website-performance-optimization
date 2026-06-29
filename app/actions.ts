@@ -27,17 +27,17 @@ export async function submitMarketScan(prevState: ScanState, formData: FormData)
     if (response.status === 200 || response.status === 202) {
       return { 
         status: "success", 
-        message: "Talebiniz alındı. Raporunuz hazırlandığında e-posta adresinize gönderilecektir." 
+        message: "Your request has been received. Your report will be sent to your e-mail address once it is prepared." 
       };
     }
 
-    return { status: "error", message: "Sunucudan beklenmedik bir yanıt geldi." };
+    return { status: "error", message: "An unexpected response was received from the server." };
 
   } catch (err) {
     // Eğer istek abort edildiyse veya ağ hatasıysa buraya düşer
     return { 
       status: "success", // Teknik olarak hata gibi görünse de kullanıcıya başarılı mesajı veriyoruz
-      message: "Talebiniz alındı. Raporunuz hazırlandığında e-posta adresinize gönderilecektir." 
+      message: "Your request has been received. Your report will be sent to your e-mail address once it is prepared." 
     };
   }
 }
