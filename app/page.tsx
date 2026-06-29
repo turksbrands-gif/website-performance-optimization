@@ -1,7 +1,6 @@
-'use client'
-import { useState } from 'react'
 import Image from "next/image"
 import { Activity, Radar, ShieldCheck } from "lucide-react"
+import { MarketScanForm } from "@/components/market-scan-form"
 
 const trustPoints = [
   { icon: Radar, label: "Real-time market radar" },
@@ -10,35 +9,6 @@ const trustPoints = [
 ]
 
 export default function Page() {
-  const [query, setQuery] = useState('')
-  const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage('')
-
-    try {
-      const response = await fetch("https://n8n.brandslord.online/webhook/site-arama", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, email, timestamp: new Date().toISOString() }),
-      })
-
-      if (response.ok) {
-        setMessage("Analiz talebiniz başarıyla alındı!")
-      } else {
-        throw new Error("Hata")
-      }
-    } catch (error) {
-      setMessage("Bağlantı hatası oluştu.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return (
     <main className="bg-grid relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20">
       {/* Ambient glow */}
@@ -76,34 +46,8 @@ export default function Page() {
           inbox.
         </p>
 
-        {/* Form yapını orijinal layout içinde korudum */}
         <div className="mt-10">
-          <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-md flex-col gap-3">
-            <input
-              type="text"
-              required
-              placeholder="Type an asset, sector or competitor..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <input
-              type="email"
-              required
-              placeholder="Enter your email for the report..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-primary px-6 py-4 font-bold text-black transition hover:bg-primary/90 disabled:opacity-50"
-            >
-              {loading ? 'Scanning market...' : 'Scan Market →'}
-            </button>
-            {message && <p className="text-sm text-primary mt-2">{message}</p>}
-          </form>
+          <MarketScanForm />
         </div>
 
         <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
