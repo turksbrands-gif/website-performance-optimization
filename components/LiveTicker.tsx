@@ -102,9 +102,9 @@ export function LiveTicker() {
         <div className="animate-live-ticker-prod">
           {safeList.length > 0 ? (
             [...safeList, ...safeList, ...safeList].map((item, index) => (
-              <div key={index} className="inline-flex items-center px-6 font-sans text-xs">
-                <span className="text-gray-400 font-medium mr-8">{item?.symbol || "N/A"}</span>
-                <span className="text-white font-semibold mr-8">{item?.price || "0.00"}</span>
+              <div key={index} className="inline-flex items-center px-16 font-sans text-xs">
+                <span className="text-gray-400 font-medium mr-2">{item?.symbol || "N/A"}</span>
+                <span className="text-white font-semibold mr-2">{item?.price || "0.00"}</span>
                 <span className={`text-[16px] font-medium ${item?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
                   {item?.change || "0.00%"}
                 </span>
