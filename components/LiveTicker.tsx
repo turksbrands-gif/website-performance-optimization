@@ -105,7 +105,7 @@ export function LiveTicker() {
               <div key={index} className="inline-flex items-center px-6 font-sans text-xs">
                 <span className="text-gray-400 font-medium mr-3">{item?.symbol || "N/A"}</span>
                 <span className="text-white font-semibold mr-3">{item?.price || "0.00"}</span>
-                <span className={`text-[11px] font-medium ${item?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
+                <span className={`text-[16px] font-medium ${item?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
                   {item?.change || "0.00%"}
                 </span>
               </div>
