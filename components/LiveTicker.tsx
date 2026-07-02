@@ -24,7 +24,6 @@ export function LiveTicker() {
         const rawData = await response.json();
         let data: MarketData[] = [];
 
-        // n8n formatı { json: item } şeklinde gelebileceği için güvenli ayıklama yapıyoruz
         if (Array.isArray(rawData)) {
           data = rawData.map(d => d.json || d);
         } else if (rawData && typeof rawData === 'object') {
@@ -32,9 +31,7 @@ export function LiveTicker() {
           data = [single];
         }
 
-        // Eğer n8n'den gelen temiz veri listesi boş değilse onu kullan
         if (data && data.length > 0) {
-          // BÜTÜN YENİ COİNLERİ İÇERİ ALACAK ŞEKİLDE LİSTEYİ GENİŞLETTİK
           const targetCryptos = ["BTC", "ETH", "SOL", "BNB", "DOGE", "LTC", "XMR", "XAUt", "PAXG"];
           
           const cryptos = data.filter(item => 
@@ -44,11 +41,9 @@ export function LiveTicker() {
           if (cryptos.length > 0) {
             setTickerData(cryptos);
           } else {
-            // Eğer n8n sadece borsa veriyorsa yukarısı boş kalmasın diye kripto yedeğini yükle
             useFallback();
           }
         } else {
-          // Veri tamamen boş geldiyse yedekleri yükle
           useFallback();
         }
       } catch (error) {
@@ -70,14 +65,13 @@ export function LiveTicker() {
     };
 
     fetchMarketData();
-    // 60 saniyede bir güncelleyerek borsa limitlerine takılmadan canlı akış sağlar
     const interval = setInterval(fetchMarketData, 60000);
     return () => clearInterval(interval);
   }, []);
 
   if (loading) {
     return (
-      <div className="w-full bg-[#0b0e14] border-b border-[#1a1e29] p-3 text-center text-sm text-gray-500 font-sans tracking-wide">
+      <div className="w-full bg-[#0b0e14] border-b border-[#1a1e29] h-10 flex items-center justify-center text-xs text-gray-500 font-sans tracking-wide">
         Loading real-time market data...
       </div>
     );
@@ -88,25 +82,24 @@ export function LiveTicker() {
   return (
     <div className="w-full h-10 overflow-hidden bg-[#0b0e14]/90 backdrop-blur-sm border-b border-[#1a1e29] flex items-center justify-between select-none px-6 relative">
       
-      {/* CANLI ORTAM İÇİN EMZİRİLMİŞ SAF CSS ANİMASYONU */}
-      <style jsx global>{`
-        @keyframes ticker-scroll {
+      {/* DERLEYİCİYİ BYPASS EDEN STANDART HTML ENJEKSİYONU */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes ticker-scroll-production {
           0% { transform: translateX(0); }
           100% { transform: translateX(-33.33%); }
         }
-        .animate-live-ticker {
+        .animate-live-ticker-prod {
           display: flex;
           white-space: nowrap;
-          animation: ticker-scroll 25s linear infinite;
+          animation: ticker-scroll-production 25s linear infinite !important;
         }
-        .animate-live-ticker:hover {
-          animation-play-state: paused;
+        .animate-live-ticker-prod:hover {
+          animation-play-state: paused !important;
         }
-      `}</style>
+      `}} />
 
       <div className="flex-1 overflow-hidden flex items-center">
-        {/* Sınıf adını 'animate-live-ticker' olarak güncelledik */}
-        <div className="animate-live-ticker">
+        <div className="animate-live-ticker-prod">
           {safeList.length > 0 ? (
             [...safeList, ...safeList, ...safeList].map((item, index) => (
               <div key={index} className="inline-flex items-center px-6 font-sans text-xs">
@@ -123,7 +116,5 @@ export function LiveTicker() {
         </div>
       </div>
     </div>
-  );
-}
   );
 }
