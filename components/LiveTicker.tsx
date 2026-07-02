@@ -86,26 +86,44 @@ export function LiveTicker() {
   const safeList = Array.isArray(tickerData) ? tickerData : [];
 
   return (
-    <div className="w-full overflow-hidden bg-[#0b0e14] border-b border-[#1a1e29] py-2 flex select-none">
-      <div className="animate-ticker flex whitespace-nowrap">
-        {safeList.length > 0 ? (
-          [...safeList, ...safeList, ...safeList].map((item, index) => (
-            <div key={index} className="inline-flex items-center px-10 font-sans text-sm">
-              <span className="text-gray-400 font-medium mr-2">{item?.symbol || "N/A"}</span>
-              <span className="text-white font-semibold mr-2">{item?.price || "0.00"}</span>
-              <span
-                className={`text-[13px] font-medium ${
-                  item?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'
-                }`}
-              >
-                {item?.change || "0.00%"}
-              </span>
-            </div>
-          ))
-        ) : (
-          <span className="text-gray-500 px-10 text-sm">No live feed available</span>
-        )}
+    <div className="w-full h-10 overflow-hidden bg-[#0b0e14]/90 backdrop-blur-sm border-b border-[#1a1e29] flex items-center justify-between select-none px-6 relative">
+      
+      {/* CANLI ORTAM İÇİN EMZİRİLMİŞ SAF CSS ANİMASYONU */}
+      <style jsx global>{`
+        @keyframes ticker-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-33.33%); }
+        }
+        .animate-live-ticker {
+          display: flex;
+          white-space: nowrap;
+          animation: ticker-scroll 25s linear infinite;
+        }
+        .animate-live-ticker:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <div className="flex-1 overflow-hidden flex items-center">
+        {/* Sınıf adını 'animate-live-ticker' olarak güncelledik */}
+        <div className="animate-live-ticker">
+          {safeList.length > 0 ? (
+            [...safeList, ...safeList, ...safeList].map((item, index) => (
+              <div key={index} className="inline-flex items-center px-6 font-sans text-xs">
+                <span className="text-gray-400 font-medium mr-1.5">{item?.symbol || "N/A"}</span>
+                <span className="text-white font-semibold mr-1.5">{item?.price || "0.00"}</span>
+                <span className={`text-[11px] font-medium ${item?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
+                  {item?.change || "0.00%"}
+                </span>
+              </div>
+            ))
+          ) : (
+            <span className="text-gray-500 px-10 text-xs">No live feed available</span>
+          )}
+        </div>
       </div>
     </div>
+  );
+}
   );
 }
