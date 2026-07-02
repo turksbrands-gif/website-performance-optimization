@@ -111,7 +111,7 @@ export function LiveTicker() {
               </div>
             ))
           ) : (
-            <span className="text-gray-500 px-10 text-xs">No live feed available</span>
+            <span className="text-gray-500 px-16 text-xs">No live feed available</span>
           )}
         </div>
       </div>
