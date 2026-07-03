@@ -9,14 +9,13 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-export const metadata = {
+// BÜTÜN METADATA VE GOOGLE DOĞRULAMA KODU TEK BİR PARANTEZ İÇİNDE TOPLANDI:
+export const metadata: Metadata = {
   title: 'Brands Lord - AI Market Radar',
   description: 'Brandlord scans any market or sector with AI and delivers a sharp intelligence report...',
   verification: {
     google: 'ECHrIzzgXsBKVs26cca2xc1DLJFiV9wHbeUGeLqoSww',
   },
-};
-  
   generator: 'v0.app',
   icons: {
     icon: [
