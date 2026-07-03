@@ -13,6 +13,15 @@ export const metadata: Metadata = {
   title: 'Brandlord | AI Market Intelligence',
   description:
     'Brandlord scans any market or sector with AI and delivers a sharp intelligence report straight to your inbox.',
+export const metadata = {
+  title: 'Brands Lord - AI Market Radar',
+  description: 'AI Market Intelligence Platform',
+  // İŞTE GOOGLE DOĞRULAMA KODUNU BURAYA EKİYORUZ:
+  verification: {
+    google: 'ECHrIzzgXsBKVs26cca2xc1DLJFiV9wHbeUGeLqoSww',
+  },
+};
+  
   generator: 'v0.app',
   icons: {
     icon: [
