@@ -13,7 +13,7 @@ export const metadata = {
   title: 'Brands Lord - AI Market Radar',
   description: 'Brandlord scans any market or sector with AI and delivers a sharp intelligence report...',
   verification: {
-    google: 'KOPYALADIGIN_KODU_BURAYA_YAPISTIR',
+    google: 'ECHrIzzgXsBKVs26cca2xc1DLJFiV9wHbeUGeLqoSww',
   },
 };
   
