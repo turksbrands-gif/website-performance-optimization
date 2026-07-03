@@ -9,10 +9,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-export const metadata: Metadata = {
-  title: 'Brandlord | AI Market Intelligence',
-  description:
-    'Brandlord scans any market or sector with AI and delivers a sharp intelligence report straight to your inbox.',
 export const metadata = {
   title: 'Brands Lord - AI Market Radar',
   description: 'Brandlord scans any market or sector with AI and delivers a sharp intelligence report...',
