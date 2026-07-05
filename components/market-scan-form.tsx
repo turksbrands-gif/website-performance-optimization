@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   ArrowRight,
   CheckCircle2,
@@ -9,11 +9,7 @@ import {
   Search,
   TrendingUp,
 } from "lucide-react"
-import { submitMarketScan, type ScanState } from "@/app/actions"
 
-const initialState: ScanState = { status: "idle" }
-
-// Ana sayfadaki terminali tetikleyecek propların tanımı
 interface MarketScanFormProps {
   onScanStart?: () => void;
   onScanComplete?: (resultText: string) => void;
@@ -22,10 +18,11 @@ interface MarketScanFormProps {
 export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormProps = {}) {
   const [step, setStep] = useState<1 | 2>(1)
   const [market, setMarket] = useState("")
-  const [state, formAction, isPending] = useActionState(
-    submitMarketScan,
-    initialState,
-  )
+  const [email, setEmail] = useState("")
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState("")
+  const [isPending, setIsPending] = useState(false)
+  
   const emailRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -34,32 +31,56 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
     }
   }, [step])
 
-  // --- 1. DÜZELTME: Form yüklenirken ana sayfadaki yükleniyor halkasını tetikle ---
-  useEffect(() => {
-    if (isPending && onScanStart) {
-      onScanStart()
-    }
-  }, [isPending, onScanStart])
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!market.trim() || !email.trim() || isPending) return;
 
-  // --- 2. DÜZELTME: Server Action başarılı olduğunda veriyi güvenle aktar ---
-  useEffect(() => {
-    if (state.status === "success") {
-      // Server Action'dan dönen mesajı veya varsayılan raporu yakalıyoruz
-      const outputMarkdown = state.message || "### 🤖 Analiz Raporu\n\nTarama başarıyla tamamlandı ve rapor e-posta adresinize gönderildi."
-      
-      if (onScanComplete) {
-        onScanComplete(outputMarkdown)
+    setIsPending(true);
+    if (onScanStart) onScanStart();
+
+    try {
+      // Doğrudan n8n canlı webhook adresinize bağlanıyoruz.
+      // Tarayıcı tabanlı istek olduğu için 8 saniye sınırına takılmaz, AI yanıtını sonuna kadar bekler.
+      const response = await fetch("https://n8n.brandslord.online/webhook/site-arama", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ market, email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // n8n tarafındaki "Respond to Webhook" node'undan dönen veriyi yakalıyoruz.
+        // n8n çıktına göre 'output', 'text', 'message' veya doğrudan text olabilir.
+        const aiResultText = data.output || data.text || data.ai_analysis || data.message || 
+                             (typeof data === "string" ? data : JSON.stringify(data));
+
+        setStatus("success");
+        
+        if (onScanComplete) {
+          onScanComplete(aiResultText);
+        }
+      } else {
+        setStatus("error");
+        setErrorMessage("An unexpected response was received from the server. Please try again.");
+        if (onScanComplete) onScanComplete("### ⚠️ Connection Error\nServer returned an error status.");
       }
+    } catch (err) {
+      console.error("n8n tarama hatası:", err);
+      setStatus("error");
+      setErrorMessage("Could not connect to the AI radar network. Please check your connection.");
+      if (onScanComplete) onScanComplete("### ⚠️ System Error\nFailed to fetch live AI report.");
+    } finally {
+      setIsPending(false);
     }
-  }, [state, onScanComplete])
+  };
 
   function goToStep2() {
     if (market.trim() === "") return
     setStep(2)
   }
 
-  // --- 3. DÜZELTME: Başarı durumunda arayüzün çökmesini önleyen temiz kart ---
-  if (state.status === "success") {
+  if (status === "success") {
     return (
       <div className="mx-auto max-w-2xl rounded-2xl border border-primary/30 bg-card/60 p-8 text-center backdrop-blur-xl animate-in fade-in duration-500">
         <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-primary/15 text-primary">
@@ -69,14 +90,19 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
           Scan complete
         </h2>
         <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
-          {state.message || "Rapor başarıyla oluşturuldu ve sistem üzerinden iletildi."}
+          Your strategic market radar analysis has been generated successfully and displayed below. A copy has also been dispatched to your corporate inbox.
         </p>
         <button
           type="button"
-          onClick={() => window.location.reload()}
+          onClick={() => {
+            setStatus("idle");
+            setStep(1);
+            setMarket("");
+            setEmail("");
+          }}
           className="mt-6 inline-flex items-center text-xs font-semibold text-primary underline underline-offset-4 hover:opacity-80"
         >
-          Yeni bir analiz başlat
+          Analyze another market
         </button>
       </div>
     )
@@ -84,12 +110,9 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
 
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="mx-auto max-w-2xl rounded-2xl border border-border bg-card/50 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
     >
-      {/* Gizli input, 2. adımda market verisinin formla birlikte sunucuya gitmesini sağlar */}
-      <input type="hidden" name="market" value={market} />
-
       {step === 1 ? (
         <div className="flex flex-col gap-3 md:flex-row">
           <div className="relative flex-1">
@@ -97,9 +120,6 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
               className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
-            <label htmlFor="market" className="sr-only">
-              Market or sector to analyze
-            </label>
             <input
               id="market"
               type="text"
@@ -129,8 +149,7 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
           <div className="flex items-center gap-2 px-2 pt-1 text-sm text-muted-foreground">
             <TrendingUp className="size-4 text-primary" aria-hidden="true" />
             <span className="truncate">
-              Analyzing{" "}
-              <span className="font-semibold text-foreground">{market}</span>
+              Analyzing <span className="font-semibold text-foreground">{market}</span>
             </span>
             <button
               type="button"
@@ -146,15 +165,13 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
                 className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
               />
-              <label htmlFor="email" className="sr-only">
-                Corporate email address
-              </label>
               <input
                 ref={emailRef}
                 id="email"
-                name="email"
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your corporate email..."
                 className="w-full rounded-xl border border-primary/60 bg-background/80 py-4 pl-12 pr-4 text-lg text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
               />
@@ -167,22 +184,19 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
               {isPending ? (
                 <>
                   <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-                  Sending
+                  Analyzing Market...
                 </>
               ) : (
-                <>Send Report</>
+                <>Send & Show Report</>
               )}
             </button>
           </div>
         </div>
       )}
 
-      {state.status === "error" && state.message ? (
-        <p
-          role="alert"
-          className="px-3 pb-1 pt-3 text-sm font-medium text-destructive"
-        >
-          {state.message}
+      {status === "error" && errorMessage ? (
+        <p role="alert" className="px-3 pb-1 pt-3 text-sm font-medium text-destructive">
+          {errorMessage}
         </p>
       ) : null}
     </form>
