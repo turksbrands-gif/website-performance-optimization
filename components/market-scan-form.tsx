@@ -13,7 +13,14 @@ import { submitMarketScan, type ScanState } from "@/app/actions"
 
 const initialState: ScanState = { status: "idle" }
 
-export function MarketScanForm() {
+// 1. ADIM (BURAYA EKLENDİ): Ana sayfadaki terminali yöneten fonksiyon tipleri
+interface MarketScanFormProps {
+  onScanStart?: () => void;
+  onScanComplete?: (resultText: string) => void;
+}
+
+// 2. ADIM (BURAYA EKLENDİ): Bileşene bu propları kabul etmesini söyledik
+export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormProps = {}) {
   const [step, setStep] = useState<1 | 2>(1)
   const [market, setMarket] = useState("")
   const [state, formAction, isPending] = useActionState(
@@ -25,6 +32,25 @@ export function MarketScanForm() {
   useEffect(() => {
     if (step === 2) emailRef.current?.focus()
   }, [step])
+
+  // --- 3. ADIM (TAM OLARAK BURAYA EKLENDİ) ---
+  // Form gönderilirken ana sayfadaki dönen "Taranıyor..." animasyonunu açar
+  useEffect(() => {
+    if (isPending && onScanStart) {
+      onScanStart()
+    }
+  }, [isPending, onScanStart])
+
+  // Server Action bittiğinde dönen analiz raporunu ana sayfaktaki terminale fırlatır
+  useEffect(() => {
+    if (state.status === "success") {
+      const outputMarkdown = state.message || "### 🤖 Analiz Raporu\n\nTarama başarıyla tamamlandı."
+      if (onScanComplete) {
+        onScanComplete(outputMarkdown)
+      }
+    }
+  }, [state, onScanComplete])
+  // -------------------------------------------
 
   function goToStep2() {
     if (market.trim() === "") return
@@ -52,7 +78,6 @@ export function MarketScanForm() {
       action={formAction}
       className="mx-auto max-w-2xl rounded-2xl border border-border bg-card/50 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
     >
-      {/* Hidden field keeps market value available when submitting on step 2 */}
       <input type="hidden" name="market" value={market} />
 
       {step === 1 ? (
