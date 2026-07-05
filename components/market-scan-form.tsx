@@ -13,13 +13,12 @@ import { submitMarketScan, type ScanState } from "@/app/actions"
 
 const initialState: ScanState = { status: "idle" }
 
-// 1. ADIM (BURAYA EKLENDİ): Ana sayfadaki terminali yöneten fonksiyon tipleri
+// Ana sayfadaki terminali tetikleyecek propların tanımı
 interface MarketScanFormProps {
   onScanStart?: () => void;
   onScanComplete?: (resultText: string) => void;
 }
 
-// 2. ADIM (BURAYA EKLENDİ): Bileşene bu propları kabul etmesini söyledik
 export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormProps = {}) {
   const [step, setStep] = useState<1 | 2>(1)
   const [market, setMarket] = useState("")
@@ -30,36 +29,39 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
   const emailRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (step === 2) emailRef.current?.focus()
+    if (step === 2) {
+      emailRef.current?.focus()
+    }
   }, [step])
 
-  // --- 3. ADIM (TAM OLARAK BURAYA EKLENDİ) ---
-  // Form gönderilirken ana sayfadaki dönen "Taranıyor..." animasyonunu açar
+  // --- 1. DÜZELTME: Form yüklenirken ana sayfadaki yükleniyor halkasını tetikle ---
   useEffect(() => {
     if (isPending && onScanStart) {
       onScanStart()
     }
   }, [isPending, onScanStart])
 
-  // Server Action bittiğinde dönen analiz raporunu ana sayfaktaki terminale fırlatır
+  // --- 2. DÜZELTME: Server Action başarılı olduğunda veriyi güvenle aktar ---
   useEffect(() => {
     if (state.status === "success") {
-      const outputMarkdown = state.message || "### 🤖 Analiz Raporu\n\nTarama başarıyla tamamlandı."
+      // Server Action'dan dönen mesajı veya varsayılan raporu yakalıyoruz
+      const outputMarkdown = state.message || "### 🤖 Analiz Raporu\n\nTarama başarıyla tamamlandı ve rapor e-posta adresinize gönderildi."
+      
       if (onScanComplete) {
         onScanComplete(outputMarkdown)
       }
     }
   }, [state, onScanComplete])
-  // -------------------------------------------
 
   function goToStep2() {
     if (market.trim() === "") return
     setStep(2)
   }
 
+  // --- 3. DÜZELTME: Başarı durumunda arayüzün çökmesini önleyen temiz kart ---
   if (state.status === "success") {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-primary/30 bg-card/60 p-8 text-center backdrop-blur-xl">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-primary/30 bg-card/60 p-8 text-center backdrop-blur-xl animate-in fade-in duration-500">
         <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-primary/15 text-primary">
           <CheckCircle2 className="size-7" aria-hidden="true" />
         </div>
@@ -67,8 +69,15 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
           Scan complete
         </h2>
         <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
-          {state.message}
+          {state.message || "Rapor başarıyla oluşturuldu ve sistem üzerinden iletildi."}
         </p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-6 inline-flex items-center text-xs font-semibold text-primary underline underline-offset-4 hover:opacity-80"
+        >
+          Yeni bir analiz başlat
+        </button>
       </div>
     )
   }
@@ -78,6 +87,7 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
       action={formAction}
       className="mx-auto max-w-2xl rounded-2xl border border-border bg-card/50 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
     >
+      {/* Gizli input, 2. adımda market verisinin formla birlikte sunucuya gitmesini sağlar */}
       <input type="hidden" name="market" value={market} />
 
       {step === 1 ? (
