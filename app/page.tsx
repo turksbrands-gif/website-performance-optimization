@@ -1,11 +1,11 @@
 "use client";
-import ReactMarkdown from 'react-markdown';
+
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
-import { Activity, Radar, ShieldCheck } from "lucide-react"
+import { Activity, Radar, ShieldCheck, Sparkles } from "lucide-react"
 import { MarketScanForm } from "@/components/market-scan-form"
 import { LiveTicker } from "@/components/LiveTicker"
-import { TradingViewChart } from "@/components/TradingViewChart"
+import ReactMarkdown from "react-markdown"
 
 interface MarketItem {
   symbol: string;
@@ -38,9 +38,12 @@ export default function Page() {
   const [usaIndices, setUsaIndices] = useState<MarketItem[]>([]);
   const [commodities, setCommodities] = useState<MarketItem[]>([]);
   const [euroAsiaIndices, setEuroAsiaIndices] = useState<MarketItem[]>([]);
-  // Yeni: Global Forex State
   const [forexRates, setForexRates] = useState<MarketItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // --- YENİ EKLENEN STATE'LER: YAPAY ZEKA ANALİZ RAPORU İÇİN ---
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     const fetchRealTimeData = async () => {
@@ -260,125 +263,4 @@ export default function Page() {
                 <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-[#11151d] to-transparent z-10 pointer-events-none" />
 
                 <div className="animate-v-marquee space-y-3 flex flex-col">
-                  {[...commodities, ...commodities].map((asset, index) => (
-                    <div key={index} className="flex justify-between items-center h-[35px] border-b border-[#1a1e29]/40 pb-2 shrink-0">
-                      <span className="text-gray-300 font-medium text-sm">{asset?.symbol || "N/A"}</span>
-                      <div className="flex flex-col items-end">
-                        <span className="text-white font-bold text-sm">{asset?.price || "0.00"}</span>
-                        <span className={`text-[11px] font-semibold ${asset?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
-                          {asset?.change || "0.00%"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            } 
-          />
-        </aside>
-
-        {/* --- ORTA PANEL --- */}
-        <section className="col-span-1 lg:col-span-6 flex flex-col items-center text-center mt-4">
-          <header className="mb-8 flex flex-col items-center">
-            <Image src="/Brands_Lord_logo_design_202606021456.png" alt="Brands Lord — Strategic Capital Insights" width={200} height={200} priority={true} className="h-36 w-36 rounded-2xl object-contain drop-shadow-[0_0_40px_oklch(0_0_0/0.6)]" />
-          </header>
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-            <span className="relative flex size-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" /><span className="relative inline-flex size-2 rounded-full bg-primary" /></span>
-            AI Market Radar Online
-          </div>
-          <h1 className="text-balance text-4xl font-extrabold tracking-tight text-foreground md:text-5xl lg:text-6xl">What market should we analyze?</h1>
-          <p className="mx-auto mt-5 max-w-xl text-pretty text-base lg:text-lg leading-relaxed text-muted-foreground">Enter any asset, sector or competitor. Our AI scans the market in real time and delivers a sharp intelligence report straight to your inbox.</p>
-          <div className="mt-10 w-full"><MarketScanForm /></div>
-          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
-            {trustPoints.map(({ icon: Icon, label }) => (
-              <li key={label} className="flex items-center gap-2"><Icon className="className size-4 text-primary" aria-hidden="true" />{label}</li>
-            ))}
-          </ul>
-        </section>
-
-        {/* --- SAĞ PANEL --- */}
-        <aside className="col-span-1 lg:col-span-3 flex flex-col gap-6">
-          <InfoCard 
-            title="Tech Giants Watchlist" 
-            className="overflow-hidden"
-            content={
-              <div className="relative h-[220px] overflow-hidden mt-1 select-none">
-                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-b from-[#11151d] to-transparent z-10 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-[#11151d] to-transparent z-10 pointer-events-none" />
-
-                <div className="animate-v-marquee space-y-3 flex flex-col">
-                  {[...techGiants, ...techGiants].map((asset, index) => (
-                    <div key={index} className="flex justify-between items-center h-[40px] border-b border-[#1a1e29]/40 pb-2 shrink-0">
-                      <div className="flex flex-col">
-                        <span className="text-white font-bold text-sm">{asset?.symbol || "N/A"}</span>
-                        <span className="text-[10px] text-gray-500 uppercase">Rank #{ (index % techGiants.length) + 1 } Tech</span>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-white font-bold text-sm">{asset?.price || "0.00"}</span>
-                        <span className={`text-[11px] font-semibold ${asset?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
-                          {asset?.change || "0.00%"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            } 
-          />
-
-          {/* YENİ: GLOBAL FOREX RATES MODÜLÜ */}
-          <InfoCard 
-            title="GLOBAL FOREX RATES" 
-            className="overflow-hidden"
-            content={
-              <div className="relative h-[160px] overflow-hidden mt-1 select-none">
-                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-b from-[#11151d] to-transparent z-10 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-[#11151d] to-transparent z-10 pointer-events-none" />
-
-                <div className="animate-v-marquee space-y-3 flex flex-col">
-                  {[...forexRates, ...forexRates].map((asset, index) => (
-                    <div key={index} className="flex justify-between items-center h-[35px] border-b border-[#1a1e29]/40 pb-2 shrink-0">
-                      <span className="text-gray-300 font-medium text-sm">{asset?.symbol || "N/A"}</span>
-                      <div className="flex flex-col items-end">
-                        <span className="text-white font-bold text-sm">{asset?.price || "0.00"}</span>
-                        <span className={`text-[11px] font-semibold ${asset?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
-                          {asset?.change || "0.00%"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            } 
-          />
-
-          <InfoCard 
-            title="EUROPE & ASIA MARKETS" 
-            className="overflow-hidden"
-            content={
-              <div className="relative h-[160px] overflow-hidden mt-1 select-none">
-                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-b from-[#11151d] to-transparent z-10 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-[#11151d] to-transparent z-10 pointer-events-none" />
-
-                <div className="animate-v-marquee space-y-3 flex flex-col">
-                  {[...euroAsiaIndices, ...euroAsiaIndices].map((asset, index) => (
-                    <div key={index} className="flex justify-between items-center h-[35px] border-b border-[#1a1e29]/40 pb-2 shrink-0">
-                      <span className="text-gray-300 font-medium text-sm">{asset?.symbol || "N/A"}</span>
-                      <div className="flex flex-col items-end">
-                        <span className="text-white font-bold text-sm">{asset?.price || "0.00"}</span>
-                        <span className={`text-[11px] font-semibold ${asset?.isUp ? 'text-[#00ffaa]' : 'text-[#ff4d4d]'}`}>
-                          {asset?.change || "0.00%"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            } 
-          />
-        </aside>
-
-      </div>
-    </main>
-  )
-}
+                  {[...commodities, ...commod
