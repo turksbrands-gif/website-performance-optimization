@@ -39,8 +39,6 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
     if (onScanStart) onScanStart();
 
     try {
-      // Doğrudan n8n canlı webhook adresinize bağlanıyoruz.
-      // Tarayıcı tabanlı istek olduğu için 8 saniye sınırına takılmaz, AI yanıtını sonuna kadar bekler.
       const response = await fetch("https://n8n.brandslord.online/webhook/site-arama", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,10 +48,33 @@ export function MarketScanForm({ onScanStart, onScanComplete }: MarketScanFormPr
       if (response.ok) {
         const data = await response.json();
         
-        // n8n tarafındaki "Respond to Webhook" node'undan dönen veriyi yakalıyoruz.
-        // n8n çıktına göre 'output', 'text', 'message' veya doğrudan text olabilir.
-        const aiResultText = data.output || data.text || data.ai_analysis || data.message || 
-                             (typeof data === "string" ? data : JSON.stringify(data));
+        // --- AKILLI VERİ AYIKLAYICI ---
+        let aiResultText = "";
+
+        // 1. Durum: n8n'den dizi [{ content: [{ text: "..." }] }] formatında geldiyse
+        if (Array.isArray(data) && data.length > 0) {
+          const firstItem = data[0];
+          if (firstItem?.content && Array.isArray(firstItem.content) && firstItem.content.length > 0) {
+            aiResultText = firstItem.content[0].text || firstItem.content[0].output_text || "";
+          } else if (typeof firstItem === "string") {
+            aiResultText = firstItem;
+          }
+        }
+
+        // 2. Durum: Standart JSON nesnesi olarak geldiyse
+        if (!aiResultText && typeof data === "object" && data !== null) {
+          if (data.content && Array.isArray(data.content) && data.content.length > 0) {
+            aiResultText = data.content[0].text || "";
+          } else {
+            aiResultText = data.output || data.text || data.ai_analysis || data.message || "";
+          }
+        }
+
+        // 3. Durum: Hiçbiri değilse ve doğrudan metinse al, yoksa JSON string bas
+        if (!aiResultText) {
+          aiResultText = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+        }
+        // ------------------------------
 
         setStatus("success");
         
