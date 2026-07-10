@@ -60,4 +60,4 @@ Disallow: /
 # END Cloudflare Managed Content
 
 # Impact.com Verification
-Impact-Site-Verification: bc3f9a4d-9b8f-45ec-8e4a-ebfb57c85035
+Impact-Site-Verification: d40ec79e-1212-4970-954b-3c23248d0d89
