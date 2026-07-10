@@ -9,6 +9,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+// BÜTÜN METADATA VE GOOGLE DOĞRULAMA KODU TEK BİR PARANTEZ İÇİNDE TOPLANDI:
 export const metadata: Metadata = {
   title: 'Brands Lord - AI Market Radar',
   description: 'Brandlord scans any market or sector with AI and delivers a sharp intelligence report...',
@@ -50,10 +51,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
+      <head>
+        {/* IMPACT.COM DOĞRULAMA KODU */}
+        <meta name='impact-site-verification' value='aec58b4a-f6ac-41ae-8c95-48618f8dea74'>
+      </head>
       <body className="font-sans antialiased">
-        
-        {/* IMPACT.COM GİZLİ DOĞRULAMA METNİ (Botlar okur, kullanıcı görmez) */}
-        <div className="sr-only">Impact-Site-Verification: c7347aa3-d02e-43eb-a395-9c82b75ee226</div>
         
         {/* --- ÜST MENÜ (NAVBAR) BAŞLANGICI --- */}
         <nav style={{ padding: '20px', display: 'flex', justifyContent: 'flex-end' }}>
