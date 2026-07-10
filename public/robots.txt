@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Impact.com Verification
+Impact-Site-Verification: bc3f9a4d-9b8f-45ec-8e4a-ebfb57c85035
