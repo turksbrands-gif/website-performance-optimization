@@ -53,7 +53,7 @@ export default function RootLayout({
     >
       <head>
         {/* IMPACT.COM DOĞRULAMA KODU */}
-        <meta name='impact-site-verification' value='4183fbc2-2b23-4581-9c70-b2bb107ebb45'>
+        <meta name='impact-site-verification' value='4183fbc2-2b23-4581-9c70-b2bb107ebb45' />
       </head>
       <body className="font-sans antialiased">
         
