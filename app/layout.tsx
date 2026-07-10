@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   description: 'Brandlord scans any market or sector with AI and delivers a sharp intelligence report...',
   verification: {
     google: 'ECHrIzzgXsBKVs26cca2xc1DLJFiV9wHbeUGeLqoSww',
+    // IMPACT.COM DOĞRULAMA KODU BURAYA EKLENDİ (Next.js bunu otomatik meta tag'e çevirecek)
+    other: {
+      'impact-site-verification': '1278c9e0-9fa6-48e8-a457-39904ad35608',
+    },
   },
   generator: 'v0.app',
   icons: {
@@ -51,10 +55,6 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
-      <head>
-        {/* IMPACT.COM DOĞRULAMA KODU */}
-        <meta name="impact-site-verification" value="1278c9e0-9fa6-48e8-a457-39904ad35608" />
-      </head>
       <body className="font-sans antialiased">
         
         {/* --- ÜST MENÜ (NAVBAR) BAŞLANGICI --- */}
