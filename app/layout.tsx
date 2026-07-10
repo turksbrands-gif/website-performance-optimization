@@ -53,7 +53,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         
         {/* IMPACT.COM GİZLİ DOĞRULAMA METNİ (Botlar okur, kullanıcı görmez) */}
-        <div className="sr-only">Impact-Site-Verification: 1278c9e0-9fa6-48e8-a457-39904ad35608</div>
+        <div className="sr-only">Impact-Site-Verification: 10118f5a-b509-4123-9950-036c5cf4cbcf</div>
         
         {/* --- ÜST MENÜ (NAVBAR) BAŞLANGICI --- */}
         <nav style={{ padding: '20px', display: 'flex', justifyContent: 'flex-end' }}>
