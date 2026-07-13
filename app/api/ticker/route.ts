@@ -9,15 +9,23 @@ export async function GET(request: Request) {
     const ts = url.searchParams.get('nocache') || Date.now().toString();
     const n8nUrl = `https://n8n.brandslord.online/webhook/market-pulse-data?t=${ts}`;
 
+    // --- N8N GİRİŞ BİLGİLERİNİZİ BURAYA YAZIN ---
+    // n8n paneline girerken kullandığınız e-posta ve şifreyi buraya girin:
+    const username = 'N8N_EPOSTA_ADRESINIZ'; 
+    const password = 'N8N_GIRIS_SIFRENIZ';
+    
+    // Bilgileri n8n'in anlayacağı Basic Auth formatına şifreliyoruz
+    const authBuffer = Buffer.from(`${username}:${password}`).toString('base64');
+
     const response = await fetch(n8nUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'Authorization': `Basic ${authBuffer}` // <--- KAPIDAKİ GÜVENLİĞE KİMLİK GÖSTERİYORUZ
       },
       cache: 'no-store', 
     });
 
-    // EĞER N8N'DEN RED CEVABI GELİRSE SEBEBİNİ YAZDIR
     if (!response.ok) {
       return NextResponse.json({ 
         hata: "n8n_red_etti", 
@@ -34,7 +42,6 @@ export async function GET(request: Request) {
     });
 
   } catch (error: any) {
-    // EĞER NEXT.JS N8N'E HİÇ ULAŞAMAZSA SEBEBİNİ YAZDIR
     console.error('Rota hatası:', error);
     return NextResponse.json({ 
       hata: "baglanti_koptu", 
