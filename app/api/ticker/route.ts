@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 export async function GET(request: Request) { // <-- DİKKAT: 'request' parametresini ekledik
   // Yerel ortamda SSL sertifika hatalarını kesin olarak ezmek için (Canlıdaysanız bunu silin)
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  
 
   try {
     // 1. Next.js'in bu isteği önbelleğe almasını KESİN olarak engellemek için URL'in sonuna rastgele bir sayı ekliyoruz.
