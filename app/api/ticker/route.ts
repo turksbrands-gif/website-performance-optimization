@@ -13,6 +13,7 @@ export async function GET() {
       headers: {
         'Accept': 'application/json',
       },
+      cache: 'no-store',      // <--- İŞTE TAM BURAYA EKLENİYOR
       next: { revalidate: 0 } // Next.js native önbellek iptali
     });
 
