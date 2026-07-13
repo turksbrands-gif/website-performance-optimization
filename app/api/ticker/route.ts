@@ -11,8 +11,8 @@ export async function GET(request: Request) {
 
     // --- N8N GİRİŞ BİLGİLERİNİZİ BURAYA YAZIN ---
     // n8n paneline girerken kullandığınız e-posta ve şifreyi buraya girin:
-    const username = 'N8N_EPOSTA_ADRESINIZ'; 
-    const password = 'N8N_GIRIS_SIFRENIZ';
+    const username = 'turksbrands@gmail.com'; 
+    const password = 'Elaoguz2024.';
     
     // Bilgileri n8n'in anlayacağı Basic Auth formatına şifreliyoruz
     const authBuffer = Buffer.from(`${username}:${password}`).toString('base64');
