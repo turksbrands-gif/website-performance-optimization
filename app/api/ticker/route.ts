@@ -9,20 +9,12 @@ export async function GET(request: Request) {
     const ts = url.searchParams.get('nocache') || Date.now().toString();
     const n8nUrl = `https://n8n.brandslord.online/webhook/market-pulse-data?t=${ts}`;
 
-    // --- N8N GİRİŞ BİLGİLERİNİZİ BURAYA YAZIN ---
-    // n8n paneline girerken kullandığınız e-posta ve şifreyi buraya girin:
-    const username = 'turksbrands@gmail.com'; 
-    const password = 'Elaoguz2024.';
-    
-    // Bilgileri n8n'in anlayacağı Basic Auth formatına şifreliyoruz
-    const authBuffer = Buffer.from(`${username}:${password}`).toString('base64');
 
     const response = await fetch(n8nUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Authorization': `Basic ${authBuffer}` // <--- KAPIDAKİ GÜVENLİĞE KİMLİK GÖSTERİYORUZ
-      },
+        },
       cache: 'no-store', 
     });
 
