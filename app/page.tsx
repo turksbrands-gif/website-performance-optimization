@@ -437,9 +437,9 @@ export default function Page() {
         </section>
       )}
 
-      {/* IMPACT.COM DOĞRULAMA (Geçici Footer) */}
-      <div className="w-full text-center mt-12 pb-4 z-10 relative">
-        <span className="text-[11px] text-gray-600 tracking-widest font-mono">
+     {/* IMPACT.COM DOĞRULAMA (Geçici Footer) */}
+      <div className="w-full text-center mt-12 pb-8 z-10 relative">
+        <span className="inline-block text-sm font-medium text-gray-200 tracking-wider bg-white/5 border border-white/10 px-4 py-1.5 rounded-full">
           Verified by impact.com
         </span>
       </div>
