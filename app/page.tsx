@@ -417,7 +417,7 @@ export default function Page() {
             {isAnalyzing ? (
               <div className="py-16 flex flex-col items-center justify-center space-y-4 text-center">
                 <div className="size-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                <p className="text-sm font-medium text-gray-300 animate-pulse">Global haber ağları taranıyor ve nesnel rapor oluşturuluyor...</p>
+                <p className="text-sm font-medium text-gray-300 animate-pulse">Global news networks are being scanned, and an objective report is being generated...</p>
               </div>
             ) : (
               <div className="prose prose-invert max-w-none text-left text-gray-300 text-sm leading-relaxed space-y-4">
