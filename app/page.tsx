@@ -427,6 +427,23 @@ export default function Page() {
           </div>
         </section>
       )}
+
+      {/* AI TERMINAL ALANI */}
+      {(isAnalyzing || aiAnalysis) && (
+        <section className="z-20 w-full max-w-[1200px] px-6 mt-16 animate-in fade-in slide-in-from-bottom-6 duration-700">
+          <div className="relative bg-[#11151d]/80 backdrop-blur-xl border border-primary/30 rounded-3xl p-8 shadow-[0_0_50px_rgba(0,255,170,0.07)] overflow-hidden">
+            {/* ... Terminal İçeriği ... */}
+          </div>
+        </section>
+      )}
+
+      {/* IMPACT.COM DOĞRULAMA (Geçici Footer) */}
+      <div className="w-full text-center mt-12 pb-4 z-10 relative">
+        <span className="text-[11px] text-gray-600 tracking-widest font-mono">
+          Verified by impact.com
+        </span>
+      </div>
+      
     </main>
   );
 }
